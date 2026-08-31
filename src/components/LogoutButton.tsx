@@ -1,21 +1,46 @@
-'use client';
+"use client";
 
-import {createClient} from '@/lib/supabase/client';
+
+import {createClient} from "@/lib/supabase/client";
+
 
 export default function LogoutButton(){
 
+
 async function logout(){
+
+
 const supabase=createClient();
+
+
 await supabase.auth.signOut();
+
+
+window.location.href="/";
+
+
 }
 
+
 return (
+
 <button
+
 onClick={logout}
-className="border rounded-lg px-4 py-2"
+
+className="
+border
+rounded-xl
+px-4
+py-2
+"
+
 >
+
 Log Keluar
+
 </button>
+
 )
 
 }
