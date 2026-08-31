@@ -1,18 +1,16 @@
 "use client";
 
-import {useState} from "react";
+import {useLanguage} from "./LanguageProvider";
 
 export default function LanguageToggle(){
+ const {language,setLanguage}=useLanguage();
 
-const [lang,setLang]=useState("MY");
-
-return (
-<button
-onClick={()=>setLang(lang==="MY"?"ENG":"MY")}
-className="rounded-xl border px-4 py-2 bg-white"
->
-{lang==="MY" ? "MY 🇲🇾" : "ENG 🇬🇧"}
-</button>
-);
-
+ return (
+ <button
+ onClick={()=>setLanguage(language==="MY"?"ENG":"MY")}
+ className="rounded-full border px-5 py-2 bg-white shadow-sm hover:shadow-md transition"
+ >
+ {language==="MY" ? "🇲🇾 BM" : "🇬🇧 ENG"}
+ </button>
+ );
 }

@@ -2,114 +2,35 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-
 export async function middleware(request: NextRequest) {
-
-  console.log("EFTA MIDDLEWARE ACTIVE");
-
-
-  let response = NextResponse.next({
-    request,
-  });
-
+  const response = NextResponse.next({ request });
 
   const supabase = createServerClient(
-
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-
     {
-
       cookies: {
-
         getAll() {
-
           return request.cookies.getAll();
-
         },
-
-
-        setAll(
-          cookiesToSet: {
-            name: string;
-            value: string;
-            options?: {
-              path?: string;
-              domain?: string;
-              maxAge?: number;
-              expires?: Date;
-              httpOnly?: boolean;
-              secure?: boolean;
-              sameSite?: "lax" | "strict" | "none";
-            };
-          }[]
-        ) {
-
-          cookiesToSet.forEach(
-            ({ name, value, options }) => {
-
-              response.cookies.set(
-                name,
-                value,
-                options
-              );
-
-            }
-          );
-
+        setAll(cookiesToSet: {name:string; value:string; options?:any}[]) {
+          cookiesToSet.forEach(({name,value,options}) => {
+            response.cookies.set(name,value,options);
+          });
         }
-
       }
-
     }
-
   );
 
+  const { data:{ user } } = await supabase.auth.getUser();
 
-  const {
-    data: {
-      user
-    }
-
-  } = await supabase.auth.getUser();
-
-
-  console.log(
-    "EFTA USER:",
-    user?.email ?? "NO USER"
-  );
-
-
-  if (
-    request.nextUrl.pathname.startsWith("/dashboard")
-    &&
-    !user
-  ) {
-
-    return NextResponse.redirect(
-
-      new URL(
-        "/auth/login",
-        request.url
-      )
-
-    );
-
+  if (request.nextUrl.pathname.startsWith("/dashboard") && !user) {
+    return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-
   return response;
-
 }
 
-
-
 export const config = {
-
-  matcher: [
-    "/dashboard",
-    "/dashboard/:path*"
-  ]
-
+  matcher: ["/dashboard", "/dashboard/:path*"]
 };

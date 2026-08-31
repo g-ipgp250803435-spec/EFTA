@@ -1,70 +1,48 @@
-"use client";
+'use client';
 
-import {useState} from "react";
-import {createClient} from "@/lib/supabase/client";
-import {useRouter} from "next/navigation";
+import {useState} from 'react';
+import {createClient} from '@/lib/supabase/client';
 
 export default function LoginPage(){
 
-const router=useRouter();
-
-const [email,setEmail]=useState("");
-const [password,setPassword]=useState("");
-const [loading,setLoading]=useState(false);
+const [email,setEmail]=useState('');
+const [password,setPassword]=useState('');
 
 async function login(){
-
-setLoading(true);
-
-const supabase=createClient();
-
-const {error}=await supabase.auth.signInWithPassword({
- email,
- password
-});
-
-if(error){
- alert(error.message);
- setLoading(false);
- return;
-}
-
-router.push("/dashboard");
-router.refresh();
-
+ const supabase=createClient();
+ await supabase.auth.signInWithPassword({
+  email,
+  password
+ });
 }
 
 return (
 <main className="min-h-screen flex items-center justify-center">
-
 <div className="bg-white border rounded-2xl p-8 w-full max-w-md">
 
-<h1 className="text-3xl font-bold">
+<h1 className="text-2xl font-bold">
 Log Masuk EFTA
 </h1>
 
-<input className="border p-3 w-full mt-5 rounded"
-placeholder="E-mel"
+<input className="border p-3 w-full mt-5"
+placeholder="Emel"
 onChange={e=>setEmail(e.target.value)}
 />
 
-<input className="border p-3 w-full mt-3 rounded"
-placeholder="Kata laluan"
+<input className="border p-3 w-full mt-3"
+placeholder="Kata Laluan"
 type="password"
 onChange={e=>setPassword(e.target.value)}
 />
 
 <button
+className="mt-5 bg-blue-600 text-white px-5 py-3 rounded-xl"
 onClick={login}
-disabled={loading}
-className="mt-5 bg-blue-600 text-white px-5 py-3 rounded-xl w-full"
 >
-{loading ? "Memproses..." : "Masuk"}
+Masuk
 </button>
 
 </div>
-
 </main>
 )
-
 }
