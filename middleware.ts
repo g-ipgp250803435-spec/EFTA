@@ -1,3 +1,10 @@
+export async function middleware(request: NextRequest) {
+
+  console.log("EFTA MIDDLEWARE ACTIVE");
+
+  ...
+}
+
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
