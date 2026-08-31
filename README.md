@@ -1,11 +1,10 @@
-# EFTA Phase 2 Professional UI
+# EFTA Phase 3 - MY/ENG Language System
 
-Upload to GitHub and deploy to Vercel.
+Updates:
+- Bahasa Melayu default interface
+- English toggle support
+- Language switch button
+- Central translation dictionary architecture
 
-This phase upgrades the visual experience:
-- Professional landing page
-- Dashboard
-- Module cards
-- Educational AI branding
-
-No external software required except GitHub, Vercel and Supabase when integration begins.
+Deployment:
+Upload to GitHub and redeploy Vercel.
