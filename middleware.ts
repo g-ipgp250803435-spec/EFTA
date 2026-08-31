@@ -1,11 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 
 export async function middleware(request: NextRequest) {
 
-  let response = NextResponse.next();
+  let response = NextResponse.next({
+    request,
+  });
 
 
   const supabase = createServerClient(
@@ -15,7 +16,6 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 
     {
-
       cookies: {
 
         getAll() {
@@ -25,16 +25,10 @@ export async function middleware(request: NextRequest) {
         },
 
 
-        setAll(
-          cookies: {
-            name: string;
-            value: string;
-            options?: object;
-          }[]
-        ) {
+        setAll(cookiesToSet) {
 
-          cookies.forEach(
-            ({ name, value, options }) => {
+          cookiesToSet.forEach(
+            ({name,value,options}) => {
 
               response.cookies.set(
                 name,
@@ -45,9 +39,9 @@ export async function middleware(request: NextRequest) {
             }
           );
 
-        }
+        },
 
-      }
+      },
 
     }
 
@@ -55,17 +49,19 @@ export async function middleware(request: NextRequest) {
 
 
   const {
-    data: {
+    data:{
       user
     }
-
   } = await supabase.auth.getUser();
 
 
+  const pathname = request.nextUrl.pathname;
+
 
   if (
-    !user &&
-    request.nextUrl.pathname.startsWith("/dashboard")
+    pathname.startsWith("/dashboard")
+    &&
+    !user
   ) {
 
     return NextResponse.redirect(
@@ -88,10 +84,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
 
-  matcher: [
-
+  matcher:[
     "/dashboard/:path*"
-
   ]
 
 };
