@@ -2,9 +2,24 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 
+type CookieToSet = {
+  name: string;
+  value: string;
+  options?: {
+    path?: string;
+    domain?: string;
+    maxAge?: number;
+    expires?: Date;
+    httpOnly?: boolean;
+    secure?: boolean;
+    sameSite?: "lax" | "strict" | "none";
+  };
+};
+
+
 export async function middleware(request: NextRequest) {
 
-  let response = NextResponse.next({
+  const response = NextResponse.next({
     request,
   });
 
@@ -19,16 +34,14 @@ export async function middleware(request: NextRequest) {
       cookies: {
 
         getAll() {
-
           return request.cookies.getAll();
-
         },
 
 
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: CookieToSet[]) {
 
           cookiesToSet.forEach(
-            ({name,value,options}) => {
+            ({ name, value, options }) => {
 
               response.cookies.set(
                 name,
@@ -49,28 +62,23 @@ export async function middleware(request: NextRequest) {
 
 
   const {
-    data:{
+    data: {
       user
     }
   } = await supabase.auth.getUser();
 
 
-  const pathname = request.nextUrl.pathname;
-
-
   if (
-    pathname.startsWith("/dashboard")
+    request.nextUrl.pathname.startsWith("/dashboard")
     &&
     !user
   ) {
 
     return NextResponse.redirect(
-
       new URL(
         "/auth/login",
         request.url
       )
-
     );
 
   }
@@ -81,10 +89,9 @@ export async function middleware(request: NextRequest) {
 }
 
 
-
 export const config = {
 
-  matcher:[
+  matcher: [
     "/dashboard/:path*"
   ]
 
