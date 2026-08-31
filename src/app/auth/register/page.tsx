@@ -1,52 +1,157 @@
-'use client';
+"use client";
 
-import {useState} from 'react';
-import {createClient} from '@/lib/supabase/client';
 
-export default function RegisterPage(){
+import {useState} from "react";
+import {createClient} from "@/lib/supabase/client";
+import {useRouter} from "next/navigation";
 
-const [email,setEmail]=useState('');
-const [password,setPassword]=useState('');
 
-async function register(){
+export default function Login(){
+
+const router=useRouter();
+
+
+const [email,setEmail]=useState("");
+
+const [password,setPassword]=useState("");
+
+
+
+async function login(){
+
 
 const supabase=createClient();
 
-await supabase.auth.signUp({
+
+
+const {
+
+error
+
+}=await supabase.auth.signInWithPassword({
+
 email,
+
 password
+
 });
+
+
+
+if(error){
+
+alert(error.message);
+
+return;
 
 }
 
-return (
-<main className="min-h-screen flex items-center justify-center">
-<div className="bg-white border rounded-2xl p-8 max-w-md w-full">
 
-<h1 className="text-2xl font-bold">
-Daftar EFTA
+
+router.push("/dashboard");
+
+
+}
+
+
+
+
+return (
+
+<div className="
+min-h-screen
+flex
+items-center
+justify-center
+">
+
+
+<div className="
+bg-white
+border
+rounded-2xl
+p-8
+max-w-md
+w-full
+">
+
+
+<h1 className="
+text-3xl
+font-bold
+">
+
+Log Masuk EFTA
+
 </h1>
 
-<input className="border p-3 w-full mt-5"
+
+<input
+
+className="
+border
+p-3
+w-full
+mt-5
+"
+
 placeholder="Emel"
-onChange={e=>setEmail(e.target.value)}
+
+onChange={
+e=>setEmail(e.target.value)
+}
+
 />
 
-<input className="border p-3 w-full mt-3"
-placeholder="Kata Laluan"
+
+<input
+
+className="
+border
+p-3
+w-full
+mt-3
+"
+
 type="password"
-onChange={e=>setPassword(e.target.value)}
+
+placeholder="Kata laluan"
+
+onChange={
+e=>setPassword(e.target.value)
+}
+
 />
+
+
 
 <button
-className="mt-5 bg-blue-600 text-white px-5 py-3 rounded-xl"
-onClick={register}
+
+onClick={login}
+
+className="
+mt-5
+bg-blue-600
+text-white
+px-5
+py-3
+rounded-xl
+w-full
+"
+
 >
-Daftar
+
+Masuk
+
 </button>
 
+
 </div>
-</main>
+
+
+</div>
+
 )
+
 
 }
