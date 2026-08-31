@@ -1,10 +1,13 @@
-# EFTA Phase 3 - MY/ENG Language System
+# EFTA Phase 4 - Supabase Authentication v1
 
-Updates:
-- Bahasa Melayu default interface
-- English toggle support
-- Language switch button
-- Central translation dictionary architecture
+Features:
+- Supabase authentication foundation
+- Login page
+- Register page
+- Logout action
+- User profile foundation
+- Protected dashboard middleware structure
+- Database schema for EFTA users
 
 Deployment:
-Upload to GitHub and redeploy Vercel.
+Upload files to GitHub and redeploy Vercel.
