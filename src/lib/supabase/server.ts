@@ -2,50 +2,74 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 
-export async function createClient(){
+export async function createClient() {
 
-const cookieStore = cookies();
+  const cookieStore = await cookies();
 
 
-return createServerClient(
+  return createServerClient(
 
-process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
 
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 
-{
+    {
 
-cookies:{
+      cookies: {
 
-getAll(){
+        getAll() {
 
-return cookieStore.getAll();
+          return cookieStore.getAll();
 
-},
+        },
 
-setAll(cookiesToSet){
 
-try{
+        setAll(
 
-cookiesToSet.forEach(
-({name,value,options})=>
-cookieStore.set(
-name,
-value,
-options
-)
-);
+          cookiesToSet: {
+            name: string;
+            value: string;
+            options?: {
+              path?: string;
+              domain?: string;
+              maxAge?: number;
+              expires?: Date;
+              httpOnly?: boolean;
+              secure?: boolean;
+              sameSite?: "lax" | "strict" | "none";
+            };
+          }[]
 
-}
+        ) {
 
-catch{}
+          try {
 
-}
+            cookiesToSet.forEach(
+              ({ name, value, options }) => {
 
-}
+                cookieStore.set(
+                  name,
+                  value,
+                  options
+                );
 
-}
+              }
+            );
 
-);
+          }
+
+          catch {
+
+            // Server Component mungkin tidak membenarkan cookie mutation
+
+          }
+
+        }
+
+      }
+
+    }
+
+  );
 
 }
