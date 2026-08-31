@@ -95,4 +95,6 @@ export const config = {
     "/dashboard/:path*"
   ]
 
+  console.log("MIDDLEWARE RUNNING");
+
 };
