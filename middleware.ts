@@ -94,7 +94,4 @@ export const config = {
   matcher: [
     "/dashboard/:path*"
   ]
-
-  console.log("MIDDLEWARE RUNNING");
-
 };
