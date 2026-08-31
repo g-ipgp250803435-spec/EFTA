@@ -5,53 +5,86 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
 
-  console.log("EFTA MIDDLEWARE RUNNING");
-
-
-  const response = NextResponse.next();
+  let response = NextResponse.next({
+    request,
+  });
 
 
   const supabase = createServerClient(
+
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
+
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+
     {
-      cookies:{
-        getAll(){
+
+      cookies: {
+
+        getAll() {
+
           return request.cookies.getAll();
+
         },
 
-        setAll(cookies){
-          cookies.forEach(({name,value,options})=>{
-            response.cookies.set(
-              name,
-              value,
-              options
-            );
-          });
+
+        setAll(
+          cookies: {
+            name: string;
+            value: string;
+            options?: {
+              path?: string;
+              domain?: string;
+              maxAge?: number;
+              expires?: Date;
+              httpOnly?: boolean;
+              secure?: boolean;
+              sameSite?: "lax" | "strict" | "none";
+            };
+          }[]
+        ) {
+
+          cookies.forEach(
+            ({ name, value, options }) => {
+
+              response.cookies.set(
+                name,
+                value,
+                options
+              );
+
+            }
+          );
+
         }
+
       }
+
     }
+
   );
 
 
   const {
-    data:{
+    data: {
       user
     }
   } = await supabase.auth.getUser();
 
 
-  if(
+
+  if (
     request.nextUrl.pathname.startsWith("/dashboard")
     &&
     !user
-  ){
+  ) {
 
     return NextResponse.redirect(
+
       new URL(
         "/auth/login",
         request.url
       )
+
     );
 
   }
@@ -62,9 +95,12 @@ export async function middleware(request: NextRequest) {
 }
 
 
+
 export const config = {
- matcher:[
-   "/dashboard",
-   "/dashboard/:path*"
- ]
+
+  matcher: [
+    "/dashboard",
+    "/dashboard/:path*"
+  ]
+
 };
