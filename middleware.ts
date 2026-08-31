@@ -1,16 +1,12 @@
-export async function middleware(request: NextRequest) {
-
-  console.log("EFTA MIDDLEWARE ACTIVE");
-
-  ...
-}
-
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 
 export async function middleware(request: NextRequest) {
+
+  console.log("EFTA MIDDLEWARE ACTIVE");
+
 
   let response = NextResponse.next({
     request,
@@ -35,7 +31,7 @@ export async function middleware(request: NextRequest) {
 
 
         setAll(
-          cookies: {
+          cookiesToSet: {
             name: string;
             value: string;
             options?: {
@@ -50,7 +46,7 @@ export async function middleware(request: NextRequest) {
           }[]
         ) {
 
-          cookies.forEach(
+          cookiesToSet.forEach(
             ({ name, value, options }) => {
 
               response.cookies.set(
@@ -75,8 +71,14 @@ export async function middleware(request: NextRequest) {
     data: {
       user
     }
+
   } = await supabase.auth.getUser();
 
+
+  console.log(
+    "EFTA USER:",
+    user?.email ?? "NO USER"
+  );
 
 
   if (
